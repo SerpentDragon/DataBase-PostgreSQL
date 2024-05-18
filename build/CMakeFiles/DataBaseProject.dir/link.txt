@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/DataBaseProject.dir/main.cpp.o CMakeFiles/DataBaseProject.dir/Controller.cpp.o CMakeFiles/DataBaseProject.dir/DBConnector.cpp.o CMakeFiles/DataBaseProject.dir/Employee.cpp.o -o DataBaseProject  /usr/lib/x86_64-linux-gnu/libpqxx.so 

@@ -1,3 +1,0 @@
-/home/dmitry/Desktop/DBTestTask/build/CMakeFiles/DataBaseProject.dir
-/home/dmitry/Desktop/DBTestTask/build/CMakeFiles/edit_cache.dir
-/home/dmitry/Desktop/DBTestTask/build/CMakeFiles/rebuild_cache.dir
