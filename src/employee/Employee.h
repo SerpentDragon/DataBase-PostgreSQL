@@ -2,7 +2,7 @@
 
 #include <ctime>
 #include <string>
-#include "DBConnector.h"
+#include "../data_base/DBConnector.h"
 
 class Employee
 {

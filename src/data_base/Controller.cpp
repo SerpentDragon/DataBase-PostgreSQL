@@ -6,7 +6,7 @@ void Controller::execute(int argc, char** argv) const noexcept
 
     switch(mode)
     {
-        case 1:
+        case 1: // заменить на enum
         {
             std::cout << "Creating the table...\n";
 

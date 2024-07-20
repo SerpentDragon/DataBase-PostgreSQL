@@ -9,13 +9,19 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(PQXX REQUIRED libpqxx)
 
 set(SOURCES
-	main.cpp
-	Controller.cpp
-	DBConnector.cpp
-	Employee.cpp
+	src/main.cpp
+	src/data_base/Controller.cpp
+	src/data_base/DBConnector.cpp
+	src/employee/Employee.cpp
 )
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+set(HEADERS
+	src/data_base/Controller.h
+	src/data_base/DBConnector.h
+	src/employee/Employee.h
+)
+
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 
