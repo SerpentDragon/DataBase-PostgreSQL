@@ -6,7 +6,7 @@ Employee::Employee(const std::string& SNP, const std::string& date, const std::s
 bool Employee::send_object() const
 {
     std::string data = "'" + SNP_ + "', '" + date_ + "', '" + sex_ + "'";
-    return DBConnector::getConnector()->send_data(data);
+    return DBConnector::getConnector().send_data(data);
 }
 
 unsigned int Employee::get_age() const
@@ -30,4 +30,10 @@ unsigned int Employee::get_age() const
     }
 
     return age;
+}
+
+std::ostream& operator<<(std::ostream& os, const Employee& employee)
+{
+    return os << employee.SNP_ << " " << employee.date_ << " " 
+        << employee.sex_ << employee.get_age();
 }

@@ -9,7 +9,7 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    if (!DBConnector::getConnector()->connect())
+    if (!DBConnector::getConnector().connect())
     {
         std::cerr << "Can not connect to the data base!\n";
         return 1;
@@ -18,7 +18,7 @@ int main(int argc, char** argv)
     Controller controller;
     controller.execute(argc, argv);
 
-    DBConnector::getConnector()->disconnect();
+    DBConnector::getConnector().disconnect();
 
     return 0;
 }

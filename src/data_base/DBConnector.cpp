@@ -1,12 +1,9 @@
 #include "DBConnector.h"
 
-DBConnector* DBConnector::connector_ = nullptr;
-
-DBConnector* DBConnector::getConnector()
+DBConnector& DBConnector::getConnector()
 {
-    if (connector_ == nullptr) connector_ = new DBConnector();
-
-    return connector_;
+    static DBConnector connector;
+    return connector;
 }
 
 bool DBConnector::connect()
@@ -79,4 +76,27 @@ bool DBConnector::send_data(const std::string& data)
     }
 
     return true;
+}
+
+pqxx::result DBConnector::select_distinct_snp_date()
+{
+    pqxx::work request(*connection_);
+
+    pqxx::result result = request.exec(
+        "WITH distinct_table AS( \
+            SELECT SNP, date \
+            FROM Employee \
+            GROUP BY SNP, date \
+            HAVING COUNT(*) = 1 \
+        ) \
+        SELECT Employee.SNP, Employee.date, Employee.sex \
+        FROM Employee JOIN distinct_table on \
+            Employee.SNP = distinct_table.SNP AND \
+            Employee.date = distinct_table.date \
+        "
+    );
+
+    request.commit();
+
+    return result;
 }

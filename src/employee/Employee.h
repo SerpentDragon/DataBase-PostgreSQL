@@ -2,6 +2,7 @@
 
 #include <ctime>
 #include <string>
+#include <iostream>
 #include "../data_base/DBConnector.h"
 
 class Employee
@@ -13,6 +14,8 @@ public:
     bool send_object() const;
 
     unsigned int get_age() const;
+
+    friend std::ostream& operator<<(std::ostream&, const Employee&);
 
 private:
 
