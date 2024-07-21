@@ -50,7 +50,7 @@ void Employee::generate_man()
 std::ostream& operator<<(std::ostream& os, const Employee& employee)
 {
     return os << employee.SNP_ << " " << employee.date_ << " " 
-        << employee.sex_ << employee.get_age();
+        << employee.sex_ << " " << employee.get_age();
 }
 
 std::string Employee::generate_random_string(std::size_t length)

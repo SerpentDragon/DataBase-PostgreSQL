@@ -2,8 +2,6 @@
 
 #include <string>
 #include <vector>
-#include <memory>
-#include <iostream>
 #include <pqxx/pqxx>
 #include "../employee/Employee.h"
 
@@ -22,6 +20,10 @@ public:
     bool send_employee(const Employee&);
 
     pqxx::result select_distinct_snp_date();
+
+    pqxx::result select_men();
+
+    void create_index();
 
     void send_block(const std::vector<Employee>&);
 

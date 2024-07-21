@@ -91,7 +91,7 @@ pqxx::result DBConnector::select_distinct_snp_date()
             FROM Employee JOIN distinct_table on \
                 Employee.SNP = distinct_table.SNP AND \
                 Employee.date = distinct_table.date \
-            "
+            ORDER BY Employee.SNP;"
         );
 
         request.commit();
@@ -103,6 +103,48 @@ pqxx::result DBConnector::select_distinct_snp_date()
         std::cout << ex.what() << std::endl;
         return {};
     }
+}
+
+pqxx::result DBConnector::select_men()
+{
+    pqxx::transaction request(*connection_);
+
+    try
+    {
+        pqxx::result result = request.exec(
+            "SELECT * \
+            FROM Employee \
+            WHERE sex = 'Male' AND SNP LIKE 'F%';"
+        );
+
+        request.commit();
+
+        return result;
+    }
+    catch(const std::exception& ex)
+    {
+        std::cout << ex.what() << std::endl;
+        return {};
+    }    
+}
+
+void DBConnector::create_index()
+{
+    pqxx::transaction request(*connection_);
+
+    try
+    {
+        pqxx::result result = request.exec(
+            "DROP INDEX IF EXISTS idx_employees_name; \
+            CREATE INDEX idx_employees_name ON Employee (LEFT(SNP, 1), sex);"
+        );
+
+        request.commit();
+    }
+    catch(const std::exception& ex)
+    {
+        std::cout << ex.what() << std::endl;
+    }  
 }
 
 void DBConnector::send_block(const std::vector<Employee>& employees)

@@ -74,10 +74,37 @@ void Controller::execute(int argc, char** argv) const noexcept
             
             break;
         }
+        case ACTION::SELECT_MEN:
+        {
+            find_men();
+            break;
+        }
+        case ACTION::SELECT_MEN_OPTIMIZED:
+        {
+            DBConnector::getConnector().create_index();
+            find_men();
+            break;
+        }
         default:
         {
             std::cout << "Wrong argument!\n";
             break;
         }
+    }
+}
+
+void Controller::find_men() const noexcept
+{
+    auto start_time = std::chrono::high_resolution_clock::now();
+    auto result = DBConnector::getConnector().select_men();
+    auto end_time = std::chrono::high_resolution_clock::now();
+
+    std::cout << "Time needed to complete request: " << 
+        std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count() << " ms\n";
+
+    for(const auto& row : result)
+    {
+        std::cout << row[0].c_str() << " " << row[1].c_str() 
+            << " " << row[2].c_str() << std::endl;
     }
 }
