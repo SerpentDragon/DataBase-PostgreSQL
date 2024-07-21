@@ -1,8 +1,11 @@
 #pragma once
 
+#include <string>
+#include <vector>
 #include <memory>
 #include <iostream>
 #include <pqxx/pqxx>
+#include "../employee/Employee.h"
 
 class DBConnector
 {
@@ -16,9 +19,11 @@ public:
 
     bool create_table();
 
-    bool send_data(const std::string&);
+    bool send_employee(const Employee&);
 
     pqxx::result select_distinct_snp_date();
+
+    void send_block(const std::vector<Employee>&);
 
 private:
 
@@ -33,10 +38,6 @@ private:
     DBConnector& operator=(DBConnector&&) noexcept = delete;
 
     ~DBConnector() = default;
-
-private:
-
-    class Employee;
 
 private:
 

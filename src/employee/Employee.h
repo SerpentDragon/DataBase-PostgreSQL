@@ -1,21 +1,33 @@
 #pragma once
 
 #include <ctime>
+#include <random>
 #include <string>
 #include <iostream>
-#include "../data_base/DBConnector.h"
 
 class Employee
 {
 public:
 
-    Employee(const std::string&, const std::string&, const std::string&);
+    Employee();
 
-    bool send_object() const;
+    explicit Employee(const std::string&, const std::string&, const std::string&);
 
     unsigned int get_age() const;
 
+    std::string to_string() const;
+
+    void generate_man();
+
     friend std::ostream& operator<<(std::ostream&, const Employee&);
+
+private:
+
+    std::string generate_random_string(std::size_t);
+
+    std::string generate_random_date();
+
+    std::string generate_random_sex();
 
 private:
 

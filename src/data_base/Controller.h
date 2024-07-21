@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../employee/Employee.h"
+#include "DBConnector.h"
 
 class Controller
 {

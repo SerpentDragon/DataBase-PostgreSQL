@@ -33,13 +33,11 @@ void DBConnector::disconnect()
 
 bool DBConnector::create_table()
 {
-    if (!connection_->is_open()) return false;
-
-    pqxx::transaction query(*connection_);
+    pqxx::transaction request(*connection_);
 
     try
     {
-        query.exec(
+        request.exec(
             "CREATE TABLE Employee ( \
             id SERIAL PRIMARY KEY, \
             SNP VARCHAR(50) NOT NULL, \
@@ -47,7 +45,7 @@ bool DBConnector::create_table()
             sex varchar(6) NOT NULL \
             )");
 
-        query.commit();
+        request.commit();
     }
     catch(const std::exception& e)
     {
@@ -58,16 +56,14 @@ bool DBConnector::create_table()
     return true;
 }
 
-bool DBConnector::send_data(const std::string& data)
-{
-    if (!connection_->is_open()) return false;
-    
-    pqxx::transaction query(*connection_);
+bool DBConnector::send_employee(const Employee& employee)
+{   
+    pqxx::transaction request(*connection_);
 
     try
     {
-        query.exec("INSERT INTO employee (snp, date, sex) VALUES (" + data + ");");
-        query.commit();
+        request.exec("INSERT INTO employee (snp, date, sex) VALUES " + employee.to_string() + ";");
+        request.commit();
     }
     catch(const std::exception& ex)
     {
@@ -80,23 +76,64 @@ bool DBConnector::send_data(const std::string& data)
 
 pqxx::result DBConnector::select_distinct_snp_date()
 {
-    pqxx::work request(*connection_);
+    pqxx::transaction request(*connection_);
 
-    pqxx::result result = request.exec(
-        "WITH distinct_table AS( \
-            SELECT SNP, date \
-            FROM Employee \
-            GROUP BY SNP, date \
-            HAVING COUNT(*) = 1 \
-        ) \
-        SELECT Employee.SNP, Employee.date, Employee.sex \
-        FROM Employee JOIN distinct_table on \
-            Employee.SNP = distinct_table.SNP AND \
-            Employee.date = distinct_table.date \
-        "
-    );
+    try
+    {
+        pqxx::result result = request.exec(
+            "WITH distinct_table AS( \
+                SELECT SNP, date \
+                FROM Employee \
+                GROUP BY SNP, date \
+                HAVING COUNT(*) = 1 \
+            ) \
+            SELECT Employee.SNP, Employee.date, Employee.sex \
+            FROM Employee JOIN distinct_table on \
+                Employee.SNP = distinct_table.SNP AND \
+                Employee.date = distinct_table.date \
+            "
+        );
 
-    request.commit();
+        request.commit();
 
-    return result;
+        return result;
+    }
+    catch(const std::exception& ex)
+    {
+        std::cout << ex.what() << std::endl;
+        return {};
+    }
+}
+
+void DBConnector::send_block(const std::vector<Employee>& employees)
+{
+    pqxx::transaction request(*connection_);
+
+    try
+    {
+        std::string request_string = "INSERT INTO employee (snp, date, sex) VALUES";
+
+        for(int i = 0; i < employees.size(); i++)
+        {
+            std::string employee_info = " " + employees[i].to_string();
+            if (i == employees.size() - 1) [[unlikely]]
+            {
+                employee_info += ';';
+            }
+            else [[likely]]
+            {
+                employee_info += ',';
+            }
+
+            request_string += employee_info;
+        }
+
+        request.exec(request_string);
+
+        request.commit();
+    }
+    catch(const std::exception& ex)
+    {
+        std::cout << ex.what() << std::endl;
+    }
 }
